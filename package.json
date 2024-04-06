@@ -5,9 +5,11 @@
   "main": "index.php",
   "scripts": {
     "build": "webpack --mode production",
-    "watch": "webpack --watch --mode development"
+    "watch": "webpack --watch --mode development",
+    "zip": "node ./zip.js"
   },
   "devDependencies": {
+    "archiver": "^7.0.1",
     "ts-loader": "^9.5.1",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
