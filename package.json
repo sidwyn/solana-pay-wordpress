@@ -1,0 +1,20 @@
+{
+  "name": "solana-pay-wordpress",
+  "version": "0.0.1",
+  "description": "Solana Pay on Wordpress",
+  "main": "index.php",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --watch --mode development"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.5.1",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/web3.js": "^1.91.4",
+    "bignumber.js": "^9.1.2"
+  }
+}

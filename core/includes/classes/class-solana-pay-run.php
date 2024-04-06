@@ -41,7 +41,7 @@ class Solana_Pay_Run{
 	 * @return	void
 	 */
 	private function add_hooks(){
-		add_action( 'admin_enqueue_scripts', array($this, 'enqueue_backend_scripts_and_styles'), 20 );
+		add_action( 'wp_enqueue_scripts', array($this, 'enqueue_backend_scripts_and_styles'), 20 );
 	
         // Check if WooCommerce is active, then add the hello world button
         if (in_array( 'woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
@@ -68,10 +68,7 @@ class Solana_Pay_Run{
 	 */
 	public function enqueue_backend_scripts_and_styles() {
 		wp_enqueue_style( 'solanapay-backend-styles', SOLANAPAY_PLUGIN_URL . 'core/includes/assets/css/backend-styles.css', array(), SOLANAPAY_VERSION, 'all' );
-		wp_enqueue_script( 'solanapay-backend-scripts', SOLANAPAY_PLUGIN_URL . 'core/includes/assets/js/backend-scripts.js', array(), SOLANAPAY_VERSION, false );
-		wp_localize_script( 'solanapay-backend-scripts', 'solanapay', array(
-			'plugin_name'   	=> __( SOLANAPAY_NAME, 'solana-pay' ),
-		));
+		wp_enqueue_script( 'solanapay-backend-scripts', SOLANAPAY_PLUGIN_URL . 'dist/bundle.js', array(), SOLANAPAY_VERSION, false );
 	}
 
 
@@ -81,7 +78,7 @@ class Solana_Pay_Run{
     
         <script>
             document.getElementById('hello-world-button').addEventListener('click', function() {
-            console.log('Hello World');
+            	console.log('Hello World');
             });
         </script>
         <?php
