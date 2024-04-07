@@ -1,22 +1,25 @@
+import * as buffer from "buffer";
+import * as ReactDOM from "react-dom/client";
+
 import {
   Connection,
   Keypair,
-  LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
   Transaction,
   clusterApiUrl,
+  sendAndConfirmTransaction,
 } from "@solana/web3.js";
 
-import BigNumber from "bignumber.js";
+import { SolanaPayContainer } from "./solana-pay-container";
+
+window.Buffer = buffer.Buffer;
+
 /*------------------------ 
 Backend related javascript
 ------------------------*/
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 // Your shop wallet address
-export const shopAddress = new PublicKey("...");
-
 console.log("Hello World BACKENDER");
 
 export type MakeTransactionInputData = {
@@ -28,81 +31,58 @@ export type MakeTransactionOutputData = {
   message: string;
 };
 
-type ErrorOutput = {
-  error: string;
-};
-
-document
-  .getElementById("hello-world-button")
-  ?.addEventListener("click", function () {
-    console.log("Hello World");
-    onClick();
-  });
-
 const onClick = async () => {
-  console.log("Hello World 2");
+  const amountLamports = 1000;
+  const shopPublicKey = Keypair.generate().publicKey;
+  const buyerPublicKey = new PublicKey(
+    "BTv9YNRqryCoCq2S9pn6DaqygeyU5UK5x8DGSEWHSiHS"
+  ); // Need to update to buyer's public key
+  let payer = Keypair.generate();
+  let connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
-  const reference = Keypair.generate().publicKey; // unique reference for this transaction
-  const buyerPublicKey = Keypair.generate().publicKey; // Need to update to buyer's public key
+  debugger;
 
   try {
-    // We pass the selected items in the query, calculate the expected cost
-    let amount = new BigNumber("10");
-    // if (amount === 0) {
-    //   console.error({ error: "Can't checkout with charge of 0" });
-    //   return;
-    // }
+    // Create Simple Transaction
+    let transaction = new Transaction();
 
-    // We pass the buyer's public key in JSON body
-    const shopPublicKey = shopAddress;
+    // Add an instruction to execute
+    transaction.add(
+      SystemProgram.transfer({
+        fromPubkey: buyerPublicKey,
+        toPubkey: shopPublicKey,
+        lamports: amountLamports,
+      })
+    );
 
-    const network = WalletAdapterNetwork.Devnet;
-    const endpoint = clusterApiUrl(network);
-    const connection = new Connection(endpoint);
-
-    // Get a recent blockhash to include in the transaction
-    const { blockhash } = await connection.getLatestBlockhash("finalized");
-
-    const transaction = new Transaction({
-      recentBlockhash: blockhash,
-      // The buyer pays the transaction fee
-      feePayer: buyerPublicKey,
-    });
-
-    // Create the instruction to send SOL from the buyer to the shop
-    const transferInstruction = SystemProgram.transfer({
-      fromPubkey: buyerPublicKey,
-      lamports: amount.multipliedBy(LAMPORTS_PER_SOL).toNumber(),
-      toPubkey: shopPublicKey,
-    });
-
-    // Add the reference to the instruction as a key
-    // This will mean this transaction is returned when we query for the reference
-    transferInstruction.keys.push({
-      pubkey: new PublicKey(reference),
-      isSigner: false,
-      isWritable: false,
-    });
-
-    // Add the instruction to the transaction
-    transaction.add(transferInstruction);
-
-    // Serialize the transaction and convert to base64 to return it
-    const serializedTransaction = transaction.serialize({
-      // We will need the buyer to sign this transaction after it's returned to them
-      requireAllSignatures: false,
-    });
-    const base64 = serializedTransaction.toString("base64");
-
-    // Insert into database: reference, amount
+    // Send and confirm transaction
+    // Note: feePayer is by default the first signer, or payer, if the parameter is not set
+    await sendAndConfirmTransaction(connection, transaction, [payer]);
 
     // Return the serialized transaction
     console.log({
-      transaction: base64,
       message: "Thanks for your order! 🍪",
     });
   } catch (err) {
-    console.error({ error: "error creating transaction" });
+    console.error(err, { error: "error creating transaction" });
     return;
   }
 };
+
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("DOM ready");
+  document.querySelector("body").addEventListener("click", (ev) => {
+    if ((ev.target as HTMLElement).id == "hello-world-button") {
+      console.log("Clicked on hello world button");
+      onClick();
+    }
+  });
+
+  const solanaPayContainer = document.getElementById(
+    "solana-pay-main-container"
+  );
+  const modalRoot = ReactDOM.createRoot(solanaPayContainer);
+
+  // 1. Use wallet-adapter react to add and pay (should be simple)
+  modalRoot.render(SolanaPayContainer());
+});

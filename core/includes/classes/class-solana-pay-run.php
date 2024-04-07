@@ -41,12 +41,11 @@ class Solana_Pay_Run{
 	 * @return	void
 	 */
 	private function add_hooks(){
-		add_action( 'wp_enqueue_scripts', array($this, 'enqueue_backend_scripts_and_styles'), 20 );
-	
-        // Check if WooCommerce is active, then add the hello world button
+		// Check if WooCommerce is active, then add the hello world button
         if (in_array( 'woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-            add_action( 'woocommerce_after_single_product_summary', array($this, 'add_hello_world_button'));
+			add_action( 'woocommerce_after_single_product_summary', array($this, 'add_hello_world_button'), 20);
         }
+		add_action( 'wp_enqueue_scripts', array($this, 'enqueue_backend_scripts_and_styles'), 50 );
 	}
 
 	/**
@@ -74,13 +73,8 @@ class Solana_Pay_Run{
 
     public function add_hello_world_button() {
         ?>
-        <button id="hello-world-button">Hello World!</button>
-    
-        <script>
-            document.getElementById('hello-world-button').addEventListener('click', function() {
-            	console.log('Hello World');
-            });
-        </script>
+		<div id="solana-pay-main-container"></div>
+
         <?php
     }
 }
