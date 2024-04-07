@@ -1,8 +1,12 @@
 import React, { FC } from "react";
 
-import PayButton from "./pay-button";
+import SolanaWallet from "./solana-wallet";
 
 export const SolanaPayContainer: FC = () => {
-  return <PayButton />;
+  return (
+    <>
+      <SolanaWallet />
+    </>
+  );
 };
-export default PayButton;
+export default SolanaPayContainer;

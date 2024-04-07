@@ -3,20 +3,19 @@ import {
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import {
-  WalletDisconnectButton,
   WalletModalProvider,
   WalletMultiButton,
 } from "@solana/wallet-adapter-react-ui";
 import React, { FC, useMemo } from "react";
 
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
+import SolanaPayButton from "./solana-pay-button";
 
 // Default styles that can be overridden by your app
-// require("@solana/wallet-adapter-react-ui/styles.css");
+require("@solana/wallet-adapter-react-ui/styles.css");
 
-export const PayButton: FC = () => {
+const SolanaWallet: FC = () => {
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
   const network = WalletAdapterNetwork.Devnet;
 
@@ -37,16 +36,19 @@ export const PayButton: FC = () => {
        * instantiate its legacy wallet adapter here. Common legacy adapters can be found
        * in the npm package `@solana/wallet-adapter-wallets`.
        */
-      new PhantomWalletAdapter(),
+      // new PhantomWalletAdapter(),
+      // new SolflareWalletAdapter(),
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [network]
   );
   const walletChildren = (
     <WalletModalProvider>
-      <WalletMultiButton />
-      <WalletDisconnectButton />
+      <div className="solana-wallet-multi-button">
+        <WalletMultiButton />
+      </div>
       {/* Your app's components go here, nested within the context providers. */}
+      <SolanaPayButton />
     </WalletModalProvider>
   );
 
@@ -60,4 +62,4 @@ export const PayButton: FC = () => {
     </ConnectionProvider>
   );
 };
-export default PayButton;
+export default SolanaWallet;

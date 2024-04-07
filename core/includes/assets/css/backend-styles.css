@@ -1,3 +1,14 @@
 /*----------------- 
 Backend related CSS
 -----------------*/
+.solana-wallet-multi-button {
+  margin-bottom: 8px;
+}
+
+.solana-pay-button {
+  margin-bottom: 8px;
+}
+
+.solana-pay-status {
+  font-weight: bold;
+}
