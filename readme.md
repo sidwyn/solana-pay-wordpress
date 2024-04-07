@@ -1,3 +1,5 @@
+https://github.com/sidwyn/solana-pay-wordpress/assets/103864/cd0a420e-3a11-4f68-a115-8475d2cbc107
+
 ## Solana Pay Wordpress Plugin
 
 This is a proof of concept for running Solana Pay on Wordpress / WooCommerce.
