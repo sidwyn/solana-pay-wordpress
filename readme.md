@@ -2,7 +2,7 @@
 
 This is a proof of concept for running Solana Pay on Wordpress / WooCommerce.
 
-It is currently in development. NOT ready for production unless you're ready to finagle the code.
+It is currently in development. NOT ready for production unless you're ready to mess around.
 
 ## Adding The Plugin
 
