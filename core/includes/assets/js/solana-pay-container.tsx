@@ -1,11 +1,22 @@
 import React, { FC } from "react";
 
+import { CURRENCY } from "./solana-pay-button";
 import SolanaWallet from "./solana-wallet";
 
-export const SolanaPayContainer: FC = () => {
+type SolanaPayContainerProps = {
+  payCurrency: CURRENCY;
+  payAmount: number;
+};
+
+export const SolanaPayContainer: FC = (
+  containerProps: SolanaPayContainerProps
+) => {
   return (
     <>
-      <SolanaWallet />
+      <SolanaWallet
+        payAmount={containerProps.payAmount}
+        payCurrency={containerProps.payCurrency}
+      />
     </>
   );
 };

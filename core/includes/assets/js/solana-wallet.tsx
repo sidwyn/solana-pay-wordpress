@@ -7,15 +7,20 @@ import {
   WalletMultiButton,
 } from "@solana/wallet-adapter-react-ui";
 import React, { FC, useMemo } from "react";
+import SolanaPayButton, { CURRENCY } from "./solana-pay-button";
 
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { clusterApiUrl } from "@solana/web3.js";
-import SolanaPayButton from "./solana-pay-button";
 
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");
 
-const SolanaWallet: FC = () => {
+type SolanaPayWalletProps = {
+  payCurrency: CURRENCY;
+  payAmount: number;
+};
+
+const SolanaWallet: FC = (walletProps: SolanaPayWalletProps) => {
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
   const network = WalletAdapterNetwork.Devnet;
 
@@ -42,13 +47,19 @@ const SolanaWallet: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [network]
   );
+
   const walletChildren = (
     <WalletModalProvider>
       <div className="solana-wallet-multi-button">
         <WalletMultiButton />
       </div>
       {/* Your app's components go here, nested within the context providers. */}
-      <SolanaPayButton />
+      <SolanaPayButton
+        environment={process.env.SOL_ENV} // Set this in your .env file as 'devnet', 'testnet' or 'mainnet
+        openConfirmationPage={true} // Callback coming soon
+        payAmount={walletProps.payAmount}
+        payCurrency={walletProps.payCurrency}
+      />
     </WalletModalProvider>
   );
 

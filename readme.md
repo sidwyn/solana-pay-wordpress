@@ -6,14 +6,17 @@ This is a proof of concept for running Solana Pay on Wordpress / WooCommerce.
 
 It is currently in development. NOT ready for production unless you're ready to mess around.
 
+[Test it out here](https://soltest.store/?product=chicky-wing)
+
 ## Adding The Plugin
 
 To add the plugin to your WooCommerce store:
 
-1. Browse to the plugins page. Should look like https://{YOUR_STORE}/wp-admin/plugins.php
-2. Install npm dependencies
-3. Build the zip: `npm run zip`
-4. Upload the zip file as a plugin and activate it.
+1. Define your SOL receiver address in your .env file by adding `SHOP_SOL_ADDRESS={YOURADDRESS}` and `SOL_ENV=` to be the SOL environment. SHOP_SOL_ADDRESS is where payment will go.
+2. Browse to the plugins page. Should look like https://{YOUR_STORE}/wp-admin/plugins.php
+3. Install npm dependencies
+4. Build the zip: `npm run zip`
+5. Upload the zip file as a plugin and activate it.
 
 ## Wordpress vs Shopify
 

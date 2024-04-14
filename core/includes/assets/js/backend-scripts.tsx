@@ -1,6 +1,8 @@
 import * as buffer from "buffer";
 import * as ReactDOM from "react-dom/client";
 
+import React from "react";
+import { CURRENCY } from "./solana-pay-button";
 import { SolanaPayContainer } from "./solana-pay-container";
 
 window.Buffer = buffer.Buffer;
@@ -14,6 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const solanaPayContainer = document.getElementById(
     "solana-pay-main-container"
   );
-  const modalRoot = ReactDOM.createRoot(solanaPayContainer);
-  modalRoot.render(SolanaPayContainer());
+  const containerRoot = ReactDOM.createRoot(solanaPayContainer);
+  containerRoot.render(
+    <SolanaPayContainer payAmount={0.01} payCurrency={CURRENCY.SOL} />
+  );
 });

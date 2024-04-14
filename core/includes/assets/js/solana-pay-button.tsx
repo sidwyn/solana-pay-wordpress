@@ -1,20 +1,57 @@
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
+import {
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+} from "@solana/web3.js";
 import React, { FC, useCallback, useState } from "react";
 
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 
-const SendSOLToRandomAddress: FC = () => {
+export enum CURRENCY {
+  SOL = 0,
+  // USDC = 1,  // coming soon
+}
+
+export enum ENVIRONMENT {
+  DEVNET = "devnet",
+  TESTNET = "testnet",
+  MAINNET = "mainnet",
+}
+
+type SolanaPayButtonProps = {
+  payCurrency: CURRENCY;
+  payAmount: number;
+  environment: ENVIRONMENT;
+  openConfirmationPage: boolean;
+};
+
+const SolanaPayButton: FC = ({
+  payCurrency,
+  payAmount,
+  environment,
+  openConfirmationPage = false,
+}: SolanaPayButtonProps) => {
   const { connection } = useConnection();
-  const { publicKey, sendTransaction, wallets } = useWallet();
+  const { publicKey, sendTransaction } = useWallet();
   const [hasPaid, setHasPaid] = useState(false);
   const [errorMessage, setHasErrorMessage] = useState();
 
-  console.log("Wallets are", wallets);
-
   const onClick = useCallback(async () => {
     if (!publicKey) throw new WalletNotConnectedError();
-    if (hasPaid) alert("You have already paid!");
+    if (hasPaid) {
+      alert("You have already paid!");
+      return;
+    }
+    if (payCurrency != CURRENCY.SOL) {
+      alert("Invalid currency");
+    }
+
+    const payAddress = process.env.SHOP_SOL_ADDRESS;
+    if (payAddress == null || payAddress.length === 0) {
+      alert("Payer address not found. Please define it in your .env file.");
+    }
 
     setHasErrorMessage(null);
     const lamports = await connection.getMinimumBalanceForRentExemption(0);
@@ -22,8 +59,8 @@ const SendSOLToRandomAddress: FC = () => {
     const transaction = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: publicKey,
-        toPubkey: Keypair.generate().publicKey,
-        lamports,
+        toPubkey: new PublicKey(payAddress),
+        lamports: payAmount * LAMPORTS_PER_SOL ?? lamports,
       })
     );
 
@@ -44,8 +81,11 @@ const SendSOLToRandomAddress: FC = () => {
 
     if (confirmation.value.err == null) {
       setHasPaid(true);
-      const explorerUrl = `https://explorer.solana.com/tx/${signature}?cluster=devnet`;
-      window.open(explorerUrl, "_blank"); // Open in new tab
+
+      if (openConfirmationPage) {
+        const explorerUrl = `https://explorer.solana.com/tx/${signature}?cluster=${environment}`;
+        window.open(explorerUrl, "_blank"); // Open in new tab
+      }
     } else {
       setHasPaid(false);
       setHasErrorMessage(confirmation.value.err);
@@ -60,7 +100,7 @@ const SendSOLToRandomAddress: FC = () => {
           disabled={!publicKey}
           className="solana-pay-button"
         >
-          Pay Sol Test Store 1 SOL!
+          Pay Sol Test Store in SOL
         </button>
       )}
       <div className="solana-pay-status">
@@ -71,4 +111,4 @@ const SendSOLToRandomAddress: FC = () => {
   );
 };
 
-export default SendSOLToRandomAddress;
+export default SolanaPayButton;

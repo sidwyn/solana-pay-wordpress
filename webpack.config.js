@@ -1,10 +1,13 @@
+const Dotenv = require("dotenv-webpack");
 const path = require("path");
 module.exports = {
-  entry: "./core/includes/assets/js/backend-scripts.ts",
+  entry: "./core/includes/assets/js/backend-scripts.tsx",
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
   },
+
+  plugins: [new Dotenv()],
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
     extensions: [".ts", ".tsx", ".js"],
