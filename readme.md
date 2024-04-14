@@ -18,6 +18,18 @@ To add the plugin to your WooCommerce store:
 4. Build the zip: `npm run zip`
 5. Upload the zip file as a plugin and activate it.
 
+## Configuring Each Product
+
+All of the logic on rendering lies in [backend-scripts.tsx](https://github.com/sidwyn/solana-pay-wordpress/blob/main/core/includes/assets/js/backend-scripts.tsx). You'll need to customize it to recognize which pages to add the SOL button for.
+
+You can either fire based off a particular DOM element, or look for a product title. We'll have better WooCommerce integration soon.
+
+Next, pass in the payAmount and payCurrency (SOL for now), to show the Pay button.
+
+## Customizing Pay Button
+
+The Solana Pay Button currently uses @solana/wallet-adapter-react and a basic button. Setting it up takes place in [solana-pay-button.tsx](https://github.com/sidwyn/solana-pay-wordpress/blob/main/core/includes/assets/js/solana-pay-button.tsx).
+
 ## Wordpress vs Shopify
 
 Why build this plugin for Wordpress instead of Shopify? Well a couple of reasons:
